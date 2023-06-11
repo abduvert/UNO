@@ -97,6 +97,8 @@ public class CircularQ {
         }
     }
 
+
+
     public Node previous(Node temp) {
         Node current = front;
         while (current.link != temp) {
@@ -104,4 +106,38 @@ public class CircularQ {
         }
         return current;
     }
+
+
+    public Node deleteNode(Node player) {
+        if (front == null)
+            return null;
+
+        Node deletedNode = null;
+
+        if (front.data == player.data) {
+            deletedNode = front;
+            front = front.link;
+            rear.link = front;
+            size--;
+            return deletedNode;
+        }
+
+        Node current = front;
+        Node nextNode = current.link;
+
+        while (nextNode != front) {
+            if (nextNode.data == player.data) {
+                deletedNode = nextNode;
+                current.link = nextNode.link;
+                size--;
+                return deletedNode;
+            }
+            current = current.link;
+            nextNode = nextNode.link;
+        }
+
+        return deletedNode;
+    }
+
+
 }

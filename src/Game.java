@@ -91,12 +91,13 @@ public class Game {
                         break;
                     case REVERSE:
                         playersCircularQ.reverseQ();
+                        //issue with the double reverse consec
                         break;
                 }
                 player.removeCard(playerCard);
 
                 if (player.cards.isEmpty()) {
-                    winner = playersCircularQ.deQueue();
+                    winner = playersCircularQ.deleteNode(temp).data;
                     break;
                 }
            }
@@ -104,7 +105,7 @@ public class Game {
     }
 
     public boolean legalCard(Cards match, Cards playerCard){
-        if ((match.color.equals(playerCard.color) && (playerCard.type == CardType.BASIC || playerCard.type == CardType.DRAW_TWO)) || (match.number == playerCard.number && playerCard.type == CardType.BASIC) || playerCard.type == CardType.WILD || playerCard.type == CardType.DRAW_FOUR || ((match.type == CardType.SKIP && playerCard.type == CardType.SKIP) || match.color.equals(playerCard.color)) || ((match.type == CardType.REVERSE && playerCard.type == CardType.REVERSE) || match.color.equals(playerCard.color))) {
+        if ((match.color.equals(playerCard.color) && (playerCard.type == CardType.BASIC || playerCard.type == CardType.DRAW_TWO)) || (match.number == playerCard.number && playerCard.type == CardType.BASIC) || playerCard.type == CardType.WILD || playerCard.type == CardType.DRAW_FOUR || playerCard.type == CardType.DRAW_TWO || ((match.type == CardType.SKIP && playerCard.type == CardType.SKIP) || match.color.equals(playerCard.color)) || ((match.type == CardType.REVERSE && playerCard.type == CardType.REVERSE) || match.color.equals(playerCard.color))) {
             return true;
         }
         return false;
