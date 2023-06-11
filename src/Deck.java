@@ -38,7 +38,7 @@ public class Deck {
 
              Players player = players;
 
-            for(int j=0;j<7;j++)
+            for(int j=0;j<2;j++)
             {
             player.cards.add(deck.pop());
 

@@ -67,7 +67,6 @@ public class CircularQ {
         return player;
     }
 
-
     public void displayQueue() {
         Node temp = front;
         System.out.printf(
@@ -83,5 +82,26 @@ public class CircularQ {
 
         temp = temp.link;
         return temp;
+    }
+
+    public void reverseQ() {
+        Stack<Node> s = new Stack<>();
+        Node temp = front;
+        for (int i = 0; i < size; i++) {
+            s.push(temp);
+            temp = temp.link;
+            deQueue();
+        }
+        while (!s.isEmpty()) {
+            enQueue(s.pop().data);
+        }
+    }
+
+    public Node previous(Node temp) {
+        Node current = front;
+        while (current.link != temp) {
+            current = current.link;
+        }
+        return current;
     }
 }

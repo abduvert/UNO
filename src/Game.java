@@ -5,7 +5,6 @@ public class Game {
 
     Players[] players;
     CircularQ playersCircularQ;
-    Deck deckk = new Deck();
     Stack<Cards> cardsStack = new Stack<>();
 
     public void InitializePlayers(Deck deck){
@@ -24,7 +23,7 @@ public class Game {
         for (int i = 0; i < input; i++) {
             System.out.println("Enter the name of the person: ");
             String name = names.nextLine();
-            players[i] = new Players(i,name);
+            players[i] = new Players(i,name, deck);
         }
 
 
@@ -52,38 +51,62 @@ public class Game {
         Players player;
         Cards card;
         Cards playerCard;
+        Players winner = new Players();
         int size = playersCircularQ.size();
 
+            CircularQ.Node temp = playersCircularQ.rear;
+            while (!(size - playersCircularQ.size() == 1))
+            {
+                temp =  playersCircularQ.next(temp);
+                player = temp.data;
+                System.out.println(player.name);
 
-           CircularQ.Node temp = playersCircularQ.rear;
-           while (!(size - playersCircularQ.size() == 1))
-           {
-              temp =  playersCircularQ.next(temp);
-              player = temp.data;
-               System.out.println(player.name);
+                card = cardsStack.peek();
+                System.out.println("\nLast Thrown Card: " + card.toString() + "\n");
 
-               card = cardsStack.peek();
-               System.out.println("CARDS STACK: " + card.toString());
+                player.ShowCards();
+                playerCard = player.input();
+                if (playerCard == null) continue;
+                while (!legalCard(card, playerCard)) {
+                   playerCard = player.input();
+                }
+                cardsStack.push(playerCard);
+                switch (playerCard.type) {
+                    case SKIP:
+                        temp = playersCircularQ.next(temp);
+                        break;
+                    case DRAW_TWO:
+                        temp = playersCircularQ.next(temp);
+                        temp.data.drawCard();
+                        temp.data.drawCard();
+                        temp = playersCircularQ.previous(temp);
+                        break;
+                    case DRAW_FOUR:
+                        temp = playersCircularQ.next(temp);
+                        temp.data.drawCard();
+                        temp.data.drawCard();
+                        temp.data.drawCard();
+                        temp.data.drawCard();
+                        temp = playersCircularQ.previous(temp);
+                        break;
+                    case REVERSE:
+                        playersCircularQ.reverseQ();
+                        break;
+                }
+                player.removeCard(playerCard);
 
-              player.ShowCards();
-              playerCard = player.input();
-
-               System.out.println("after");
-
-              LegalCard(card,playerCard);
-
-            //matching the cards
-
-
+                if (player.cards.isEmpty()) {
+                    winner = playersCircularQ.deQueue();
+                    break;
+                }
            }
-
-
+        System.out.println("Winner: " + winner.name);
     }
 
-    public boolean LegalCard(Cards match, Cards playerCard){
-
-        return true;
+    public boolean legalCard(Cards match, Cards playerCard){
+        if ((match.color.equals(playerCard.color) && (playerCard.type == CardType.BASIC || playerCard.type == CardType.DRAW_TWO)) || (match.number == playerCard.number && playerCard.type == CardType.BASIC) || playerCard.type == CardType.WILD || playerCard.type == CardType.DRAW_FOUR || ((match.type == CardType.SKIP && playerCard.type == CardType.SKIP) || match.color.equals(playerCard.color)) || ((match.type == CardType.REVERSE && playerCard.type == CardType.REVERSE) || match.color.equals(playerCard.color))) {
+            return true;
+        }
+        return false;
     }
-
-
 }

@@ -12,8 +12,5 @@ public class Driver {
         Game game = new Game();
         game.InitializePlayers(deck);
         game.turn();
-
     }
-
-
 }
